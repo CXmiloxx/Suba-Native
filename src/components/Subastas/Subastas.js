@@ -1,23 +1,31 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ActivityIndicator, FlatList } from "react-native";
-import Tarjeta from "./Tarjeta";
-import { Dimensions } from "react-native";
-
-const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  FlatList,
+  Dimensions,
+} from 'react-native';
+import Tarjeta from './Tarjeta';
+import { get } from '../../api/httpService';
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 const Subastas = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://apisubastock.cleverapps.io/subasta/Obtener")
-      .then((res) => res.json())
+    get('subasta/Obtener')
       .then((data) => {
         setData(data.data);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((error) => {
+        console.error('Error al obtener las subastas:', error);
+        setLoading(false);
+      });
   }, []);
 
   const subastas = data.subastas || [];
@@ -56,6 +64,8 @@ const Subastas = () => {
             fechaFin={item.fechaFin}
           />
         )}
+        numColumns={screenWidth > 600 ? 2 : 1}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
     </View>
   );
@@ -64,19 +74,22 @@ const Subastas = () => {
 const styles = StyleSheet.create({
   loaderContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     height: screenHeight,
   },
   noDataContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
   },
   listContainer: {
     flex: 1,
     padding: 10,
+  },
+  separator: {
+    height: 10,
   },
 });
 

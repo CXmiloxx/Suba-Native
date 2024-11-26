@@ -7,19 +7,18 @@
         (ext) => ext !== "svg"
     );
 
-    config.resolver.sourceExts = [...config.resolver.sourceExts, "svg"];
-
+    config.resolver.sourceExts = [
+        ...config.resolver.sourceExts,
+        "svg",
+        "js",
+        "jsx",
+        "ts",
+        "tsx",
+    ];
     config.transformer = {
         ...config.transformer,
         babelTransformerPath: require.resolve("react-native-svg-transformer"),
     };
-
-    config.resolver.assetExts = [
-        ...config.resolver.assetExts,
-        "png",
-        "jpg",
-        "jpeg",
-    ];
 
     return config;
     })();
